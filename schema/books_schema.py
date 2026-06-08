@@ -3,6 +3,8 @@ from pydantic import (
     Field,
 )  # 요청 데이터와 응답 데이터의 구조를 정의할 때 사용
 
+from typing import List, Optional  # 데이터를 여러 개 담을 수 있는 컬렉션 객체
+
 
 # ----------------------------------------------
 # 도서 등록 요청 스키마
@@ -59,7 +61,7 @@ class BookCreate(BaseModel):
 
 
 # ----------------------------------------------
-# 도서 응답 스키마 - 도서 등록, 도서 검색, 수정의 결과용 스키마
+# 도서 응답 스키마 - 도서 등록, 도서 검색용 스키마
 # ----------------------------------------------
 class BookResponse(BaseModel):
     """
@@ -71,3 +73,19 @@ class BookResponse(BaseModel):
     author: str
     price: int
     category: str
+
+
+# ----------------------------------------------
+# 도서 수정 스키마 - 도서수정의 결과용 스키마
+# ----------------------------------------------
+class BookUpdate(BaseModel):
+    """
+    도서 수정시 요청되는 스키마
+    모든 필드가 Optional -> 변경할 필드만 전송 되어 수정되도록...
+    """
+
+    title: Optional[str] = None
+    author: Optional[str] = None
+    price: Optional[int] = Field(None, gt=0)
+    category: Optional[str] = None
+    
