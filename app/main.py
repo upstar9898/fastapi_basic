@@ -32,7 +32,7 @@ from fastapi import FastAPI, HTTPException, Query, Path
 
 from typing import List, Optional  # 데이터를 여러 개 담을 수 있는 컬렉션 객체
 
-from schema.BookCreate import BookCreate
+from schema.books_schema import BookCreate
 
 # FastAPI 객체 생성
 app = FastAPI(
