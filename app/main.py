@@ -32,7 +32,7 @@ from fastapi import FastAPI, HTTPException, Query, Path
 
 from typing import List, Optional  # 데이터를 여러 개 담을 수 있는 컬렉션 객체
 
-from schema.books_schema import BookCreate, BookResponse
+from schema.books_schema import BookCreate, BookResponse, BookUpdate
 
 # FastAPI 객체 생성
 app = FastAPI(
@@ -132,6 +132,28 @@ def get_book(
     return books_db[book_id]
 
 
-# 도서 수정
+# 도서 수정 (PUT /books/{book_id})
+@app.put("/books/{book_id}", response_model=BookResponse, tags=["도서"])
+def update_book(book_id: int, update: BookUpdate):
+    """
+    도서 정보를 수정합니다.
+    변경할 필드만 보내도 됩니다. (나머지는 원래 값 유지됨)
+    예 : {"price" : 200000} -> 가격만 변경
+    """
+    if book_id not in books_db:
+        raise HTTPException(
+            status_code=404,
+            detail=f"도서 {book_id}번을 찾을 수 없습니다.",
+        )
+
+    # exclude_none=True None인 필드 제외
+    changes = update.model_dump(exclude_none=True)
+
+    # 딕셔너리의 모든 키를 순회하면 값을 변경
+    for k, v in changes.items():
+        books_db[book_id][k] = v  # book_id번 책의 k필드의 값을 v로 변경
+
+    return books_db[book_id]
+
 
 # 도서 삭제
