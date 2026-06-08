@@ -104,11 +104,32 @@ def get_books(
     - ?category=프로그래밍 : 카테고리 필터
     """
     items = list(books_db.values())
-    
+
     if category:
         items = [book for book in items if book["category"] == category]
-    
+
     return items
+
+
+# 개별도서 검색 (GET /books/{book_id}) - books_id : unique한 도서의 번호
+@app.get("/books/{book_id}", response_model=BookResponse, tags=["도서"])
+def get_book(
+    # Path Parameter : URL 경로에 포함된 값을 얻어올 때 사용
+    book_id: int = Path(
+        ...,
+        ge=1,  # greater than or equals to
+        description="도서 ID로 도서 검색 (ID는 1 이상)",
+    ),
+):
+    """
+    도서 ID로 도서 한 건 조회
+    """
+    if book_id not in books_db:
+        raise HTTPException(
+            status_code=404,
+            detail=f"도서 {book_id}번을 찾을 수 없습니다.",
+        )
+    return books_db[book_id]
 
 
 # 도서 수정
