@@ -37,12 +37,21 @@ from typing import List, Optional  # 데이터를 여러 개 담을 수 있는 �
 
 from app.schemas.books_schema import BookCreate, BookResponse, BookUpdate
 
+from app.routers.llm_router import llm_router
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # FastAPI 객체 생성
 app = FastAPI(
     title="도서관리 API",
     description="FastAPI 기초 실습 - 도서관리 CRUD를 할 수 있는 엔드포인트",
     version="1.0.0",
-)
+)  # APIRouter를 함께 가지고 있다.
+
+# 라우터 추가 등록
+app.include_router(llm_router)
 
 # DB 대신 사용할 딕셔너리
 books_db: dict = {}
@@ -173,7 +182,7 @@ def update_book(book_id: int, update: BookUpdate):
 
 # 도서 삭제 (DELETE /books/{book_id})
 @app.delete("/books/{book_id}", status_code=204, tags=["도서"])
-def delete_book(book_id:int):
+def delete_book(book_id: int):
     """
     {book_id}번 도서를 삭제합니다
     status_code = 204. 삭제 성공
@@ -183,23 +192,24 @@ def delete_book(book_id:int):
             status_code=404,
             detail=f"도서 {book_id}번을 찾을 수 없습니다.",
         )
-    
+
     del books_db[book_id]
     # status_code=204 -> 응답 본문이 없어도 됨. => return 생략 가능
-    
 
 
-#----------------------------------------------
+# ----------------------------------------------
 # 프론트엔드 페이지 제공 (맨 마지막에 등록)
 # - http://127.0.0.1:8000/         → index.html
 # - http://127.0.0.1:8000/frontend/ → index.html
-#----------------------------------------------
+# ----------------------------------------------
 @app.get("/", include_in_schema=False)
 def serve_root_page():
     """루트 주소 접속 시 프론트엔드 페이지를 바로 보여줍니다."""
     index_file = frontend_dir / "index.html"
     if not index_file.exists():
-        raise HTTPException(status_code=404, detail="frontend/index.html 파일을 찾을 수 없습니다.")
+        raise HTTPException(
+            status_code=404, detail="frontend/index.html 파일을 찾을 수 없습니다."
+        )
     return FileResponse(index_file)
 
 
@@ -211,5 +221,8 @@ def redirect_frontend():
 
 # StaticFiles는 반드시 API 라우트 등록 후 맨 마지막에 mount
 if frontend_dir.exists():
-    app.mount("/frontend", StaticFiles(directory=str(frontend_dir), html=True), name="frontend")
-
+    app.mount(
+        "/frontend",
+        StaticFiles(directory=str(frontend_dir), html=True),
+        name="frontend",
+    )
