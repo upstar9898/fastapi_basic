@@ -35,7 +35,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from typing import List, Optional  # 데이터를 여러 개 담을 수 있는 컬렉션 객체
 
-from schemas.books_schema import BookCreate, BookResponse, BookUpdate
+from app.schemas.books_schema import BookCreate, BookResponse, BookUpdate
 
 # FastAPI 객체 생성
 app = FastAPI(
