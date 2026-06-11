@@ -6,10 +6,12 @@ from typing import Optional
 
 from fastapi import HTTPException, Query, Path
 
-books_router = APIRouter(prefix="/books", tags=["도서"])
+books_router = APIRouter(tags=["도서"])
 
 # DB 대신 사용할 딕셔너리
 books_db: dict = {}
+
+next_id = 1
 
 # 도서 등록 (POST /books)
 @books_router.post("/books", response_model=BookResponse, status_code=201, tags=["도서"])
