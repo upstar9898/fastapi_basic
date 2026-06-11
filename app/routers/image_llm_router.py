@@ -10,6 +10,8 @@ from app.schemas.image_llm import (
     ImageAnalysisForm,
 )
 
+from app.services.file_analyze_service import validate_image, analyze_image_with_llm
+
 image_llm_router = APIRouter(prefix="/imagellm", tags=["LLM"])
 
 
@@ -17,7 +19,7 @@ image_llm_router = APIRouter(prefix="/imagellm", tags=["LLM"])
 # 파일 + 텍스트 함께 받기
 # JSON Body와 File은 함께 쓸 수가 없다
 # Form : 나머지 텍스트 데이터를 받는.. (form 태그의 데이터)
-@image_llm_router.POST(
+@image_llm_router.post(
     "/analyaze_image",
     response_model=ImageAnalysisResponse,
     status_code=201,
@@ -36,4 +38,13 @@ async def analyze_image(
     - `language`: 출력 언어 ko/en
     """
     contents = await file.read()  # 파일 읽기
-    validate_image(file.content_type, len(contents))
+    validate_image(file.content_type, len(contents))  # 검증
+
+    result = await analyze_image_with_llm(contents, form.prompt, form.language)
+    return ImageAnalysisResponse(
+        filename=file.filename,
+        size_bytes=len(contents),
+        description=result.get("description", ""),
+        objects=result.get("objects", []),
+        mood=result.get("mood", ""),
+    )
