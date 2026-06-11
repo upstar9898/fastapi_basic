@@ -35,6 +35,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.routers.llm_router import llm_router
 from app.routers.books_router import books_router
+from app.routers.image_llm_router import image_llm_router
 
 from dotenv import load_dotenv
 
@@ -50,6 +51,7 @@ app = FastAPI(
 # 라우터 추가 등록
 app.include_router(llm_router)
 app.include_router(books_router)
+app.include_router(image_llm_router)
 
 
 # 새 도서를 등록할 떄 사용할 id
