@@ -35,7 +35,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.routers.llm_router import llm_router
 from app.routers.books_router import books_router
-from app.routers.file_llm_router import image_llm_router
+from app.routers.file_llm_router import file_llm_router
 
 from dotenv import load_dotenv
 
@@ -51,11 +51,7 @@ app = FastAPI(
 # 라우터 추가 등록
 app.include_router(llm_router)
 app.include_router(books_router)
-app.include_router(image_llm_router)
-
-
-# 새 도서를 등록할 떄 사용할 id
-next_id = 1
+app.include_router(file_llm_router)
 
 # CORS 설정: 브라우저(프론트엔드)에서 API를 호출할 수 있게 허용
 app.add_middleware(
