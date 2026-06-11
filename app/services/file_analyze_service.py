@@ -48,7 +48,7 @@ async def analyze_image_with_llm(
     """
     client = get_llm_client()
     lang = LANG_MAP.get(language, "한국어")
-    b64 = base64.encode(contents).decode("UTF-8")
+    b64 = base64.b64encode(contents).decode("UTF-8")
 
     full_prompt = (
         f"{prompt}\n"
