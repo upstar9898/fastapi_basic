@@ -35,7 +35,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.routers.llm_router import llm_router
 from app.routers.books_router import books_router
-from app.routers.image_llm_router import image_llm_router
+from app.routers.file_llm_router import image_llm_router
 
 from dotenv import load_dotenv
 

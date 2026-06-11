@@ -4,7 +4,7 @@
 
 from fastapi import APIRouter  # router를 분리할 때 필요
 from fastapi import UploadFile, File, Form, HTTPException, Depends
-from app.schemas.image_llm import (
+from app.schemas.file_llm import (
     ImageAnalysisResponse,
     TextSummaryResponse,
     ImageAnalysisForm,
