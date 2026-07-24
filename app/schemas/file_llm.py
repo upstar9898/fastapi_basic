@@ -41,3 +41,15 @@ class ImageAnalysisForm:
     ):
         self.prompt = prompt
         self.language = language
+
+
+class TextSummaryForm:
+    """텍스트 파일 요약 엔드포인트의 Form 파라미터 클래스"""
+
+    def __init__(
+        self,
+        max_length: int = Form(200, description="요약 최대 길이(글자)"),
+        language: str = Form("ko", description="출력 언어 (ko/en)"),
+    ):
+        self.max_length = max_length
+        self.language = language
